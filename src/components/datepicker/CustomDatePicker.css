@@ -1,0 +1,41 @@
+/* Improve input box */
+.custom-datepicker-input {
+  background: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 8px 10px;
+}
+
+/* Style the popup calendar */
+.custom-calendar {
+  font-family: 'Segoe UI', sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+/* Highlight today's date */
+.react-datepicker__day--today {
+  font-weight: bold;
+  border: 1px solid #007bff;
+  border-radius: 50%;
+}
+
+/* Style disabled dates (faded) */
+.react-datepicker__day--disabled {
+  opacity: 0.3 !important;
+  pointer-events: none;
+}
+
+/* Selected date */
+.react-datepicker__day--selected {
+  background-color: #007bff !important;
+  color: white !important;
+  border-radius: 50%;
+}
+
+/* Hover effect */
+.react-datepicker__day:hover {
+  background-color: #e6f0ff;
+  border-radius: 50%;
+}

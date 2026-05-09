@@ -1,0 +1,72 @@
+.milestone-loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #f9f9fb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .orbit-wrapper {
+    position: relative;
+    width: 200px;
+    height: 200px;
+  }
+  
+  .main-logo {
+    width: 80px;
+    height: 80px;
+    z-index: 10;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .orbit-logo {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    animation: orbit 6s linear infinite;
+    transform-origin: 60px center;
+  }
+  
+  .orbit1 {
+    top: 0;
+    left: 50%;
+    animation-delay: 0s;
+  }
+  
+  .orbit2 {
+    top: 50%;
+    left: 0;
+    animation-delay: 1s;
+  }
+  
+  .orbit3 {
+    bottom: 0;
+    left: 50%;
+    animation-delay: 2s;
+  }
+  
+  .loader-message {
+    margin-top: 30px;
+    font-size: 18px;
+    color: #121c50;
+    font-weight: 600;
+  }
+  
+  @keyframes orbit {
+    0% {
+      transform: rotate(0deg) translateX(60px) rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg) translateX(60px) rotate(-360deg);
+    }
+  }
+  

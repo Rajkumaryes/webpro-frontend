@@ -1,0 +1,162 @@
+import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
+import {apiUrl,AP,apiUrlAP} from '../../../constants/defaultValues'
+import {authHeader} from '../../../helpers/authheader';
+import axios from 'axios';
+export const areasService = {
+  fetchapi,
+  createapi,
+  updateapi,
+  deleteapi,
+  fetchapiRegionWise,
+  fetchapiMultipleRegionWise,
+  fileUpload
+};
+  export function fetchapi() {
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+          'Accept': 'application/json, text/plain, */*',  // It can be used to overcome cors errors
+          'Content-Type': 'application/json',
+          ...authHeader()
+        },
+  };
+  return fetch(  `${apiUrlAP}${AP}area`, requestOptions)
+  .then(response => response.json())
+  .then(user => { 
+      return user;
+      }) 
+      .catch((error) => {
+    }); 
+
+}  
+export function fetchapiRegionWise(region) {
+
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json, text/plain, */*',  // It can be used to overcome cors errors
+        'Content-Type': 'application/json',
+        ...authHeader()
+      },
+      body: JSON.stringify({region})
+};
+return fetch(  `${apiUrlAP}${AP}area/regionwise_area`, requestOptions)
+.then(response => response.json())
+.then(user => { 
+    return user;
+    }) 
+    .catch((error) => {
+  }); 
+
+} 
+export function fetchapiMultipleRegionWise(region) {
+
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json, text/plain, */*',  // It can be used to overcome cors errors
+        'Content-Type': 'application/json',
+        ...authHeader()
+      },
+      body: JSON.stringify({region})
+};
+return fetch(  `${apiUrlAP}${AP}area/multiple_regionwise`, requestOptions)
+.then(response => response.json())
+.then(user => { 
+    return user;
+    }) 
+    .catch((error) => {
+  }); 
+
+}
+export function createapi(region,name,status) {
+
+  const user_id = localStorage.getItem('user_id') !== null ?  parseInt(localStorage.getItem('user_id')) :null
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json, text/plain, */*',  // It can be used to overcome cors errors
+        'Content-Type': 'application/json',
+        ...authHeader()
+      },
+    body: JSON.stringify({region, name,status,user_id})
+};
+return fetch(  `${apiUrlAP}${AP}area/create`, requestOptions)
+.then(response => response.json())
+.then(user => { 
+    return user;
+    }) 
+    .catch((error) => {
+  }); 
+
+}
+export function fileUpload(file)
+{
+  let data = new FormData();
+  data.append('formFile', file);
+  var url = `${apiUrlAP}${AP}area/bulkupload`
+  return axios.post(url, data, {
+    headers: {
+    'content-type': 'multipart/form-data',
+    ...authHeader()
+    }
+    })
+    .then(res => {
+     return res
+      
+    })
+    .catch()
+         
+}
+export function updateapi(id,region,name,status) {
+
+  const user_id = localStorage.getItem('user_id') !== null ?  parseInt(localStorage.getItem('user_id')) :null
+  const requestOptions = {
+    method: 'Post',
+    headers: {
+        'Accept': 'application/json, text/plain, */*',  // It can be used to overcome cors errors
+        'Content-Type': 'application/json',
+        ...authHeader()
+      },
+    body: JSON.stringify({region,name,status,user_id})
+};
+return fetch(  `${apiUrlAP}${AP}area/update/${id}`, requestOptions)
+.then(response => response.json())
+.then(user => { 
+    return user;
+    }) 
+    .catch((error) => {
+  }); 
+
+}  
+ 
+function deleteapi(id) {
+  const user_id = localStorage.getItem('user_id') !== null ?  parseInt(localStorage.getItem('user_id')) :null
+  const requestOptions = {
+      method: 'Post',
+      headers: {
+          'Accept': 'application/json, text/plain, */*',  // It can be used to overcome cors errors
+          'Content-Type': 'application/json',
+          ...authHeader()
+        },
+      body: JSON.stringify({ user_id })
+  };
+  return fetch(`${apiUrlAP}${AP}area/delete/${id}`, requestOptions)
+  .then(response => response.json())
+  .then(user => {  
+      return user;
+      }) 
+      .catch((error) => {
+       
+    });          
+}
+  export default function* rootSaga() {
+    yield all([
+      fork(fetchapi),
+      fork(createapi),
+     fork(updateapi),
+     fork(deleteapi),
+    ]);
+  }
+  

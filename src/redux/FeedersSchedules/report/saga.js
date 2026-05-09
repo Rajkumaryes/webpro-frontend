@@ -1,0 +1,80 @@
+import { all, call, fork, put, takeEvery } from 'redux-saga/effects';
+import {apiUrl,apiUrlFeeder,FeedersSchedules} from '../../../constants/defaultValues'
+import {authHeader} from '../../../helpers/authheader';
+export const reportService = {
+  fetchapi,
+  fetchkpiapi,
+  regionwisearea
+};
+  export function fetchapi(apiname,page,per_page,startdate,enddate,user_array,is_report,
+    username,menu,submenu,team_id,team,type) {
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+          'Accept': 'application/json, text/plain, */*',  // It can be used to overcome cors errors
+          'Content-Type': 'application/json',
+          ...authHeader()
+        },
+        body: JSON.stringify({page,per_page,startdate,enddate,user_array,is_report,
+          username,menu,submenu,team_id,team,type})
+  };
+  return fetch(  `${apiUrlFeeder}${FeedersSchedules}${apiname}/report`, requestOptions)
+  .then(response => response.json())
+  .then(user => { 
+      return user;
+      }) 
+      .catch((error) => {
+    }); 
+
+}  
+ 
+export function fetchkpiapi(page,per_page,startdate,enddate,user_array,is_report,
+  username,menu,submenu,region,area,location) {
+
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json, text/plain, */*',  // It can be used to overcome cors errors
+        'Content-Type': 'application/json',
+        ...authHeader()
+      },
+      body: JSON.stringify({page,per_page,startdate,enddate,user_array,is_report,
+        username,menu,submenu,region,area,location})
+};
+return fetch(  `${apiUrlFeeder}${FeedersSchedules}kpireport/report`, requestOptions)
+.then(response => response.json())
+.then(user => { 
+    return user;
+    }) 
+    .catch((error) => {
+  }); 
+
+} 
+export function regionwisearea(region_array) {
+
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json, text/plain, */*',  // It can be used to overcome cors errors
+        'Content-Type': 'application/json',
+        ...authHeader()
+      },
+      body: JSON.stringify({region_array})
+};
+return fetch(  `${apiUrlFeeder}${FeedersSchedules}areaselection/regionwise_multiple`, requestOptions)
+.then(response => response.json())
+.then(user => { 
+    return user;
+    }) 
+    .catch((error) => {
+  }); 
+
+}  
+  export default function* rootSaga() {
+    yield all([
+      fork(fetchapi),
+      fork(fetchkpiapi)
+,
+    ]);
+  }
+  

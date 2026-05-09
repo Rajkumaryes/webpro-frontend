@@ -1,0 +1,47 @@
+.dashboard-card {
+  width: 100%;
+  border-radius: 15px; /* Increased border radius for a more rounded look */
+  height: 150px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  background-color: #f0f0f0; /* Light grey background color */
+  border: none;
+}
+
+.dashboard-card:nth-child(even) {
+  background-color: #e0e0e0; /* Alternate background color for even cards */
+}
+
+.card-percentage {
+  font-size: 2em;
+  font-weight: bold;
+  color: #333;
+}
+
+.card-body {
+  text-align: left;
+  padding: 10px;
+  flex: 1 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+}
+
+.space-margin {
+  margin-bottom: 20px;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}

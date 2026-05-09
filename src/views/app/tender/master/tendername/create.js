@@ -1,0 +1,228 @@
+import React, { Component } from 'react';
+import { Row } from 'reactstrap';
+import { Colxx } from '../../../../../components/common/CustomBootstrap';
+import { injectIntl } from 'react-intl';
+import { connect } from 'react-redux';
+import { Label,Input,Button} from 'reactstrap';
+import { createNotification } from '../../../../../toast';
+import {onChangeLanguage} from '../../../../../helper';
+import{TendernameService} from '../../../../../redux/projectmasters/tendername/saga';
+import Loading from "react-fullscreen-loading";
+class RegisterUser extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      id:0,
+      name:'',
+      lane_count:'',
+      status : 1,
+      isEdit:false,
+      loading:false
+    };
+  }
+
+  componentDidMount() {
+    const {isEdit,record} = this.props
+    if(isEdit === true)
+    {
+      this.setState({
+        id:record.id,
+        name:record.name,
+        lane_count:record.lane_count,
+        status: record.status,
+        isEdit:true
+      })
+     
+    }    
+  }
+
+onSubmit() { 
+  const {id,name,lane_count,status,isEdit} = this.state;
+
+  if(name !== "" && lane_count !== "")
+  {
+    if(isEdit === true)
+    {
+      this.updateAPI(id,name,lane_count,status)
+    }
+    else
+    {
+      this.createAPI(name,lane_count,status)
+    }
+   
+  }
+  else
+  {
+    createNotification('Please fill mandatory field','error','filled')
+  }
+ 
+}
+createAPI(name,lane_count,status)
+{
+  this.setState({
+    loading : true
+  })
+  TendernameService.createtendername(name,lane_count,status)
+    .then((res) => { 
+      this.setState({   
+        loading : false     
+      }) 
+      if(res.status)
+        {
+          createNotification('Created','success','filled')
+          this.close(true)
+        }else{
+          createNotification(res.message,'error','filled')
+        }                
+  
+  })
+  .catch((error) => { 
+    this.setState({
+      loading : false
+    })
+  });
+   
+}
+updateAPI(id,name,lane_count,status)
+{
+  this.setState({
+    loading : true
+  })
+  TendernameService.updatetendername(id,name,lane_count,status)
+    .then((res) => { 
+      this.setState({   
+        loading : false     
+      }) 
+      if(res.status)
+        {
+          createNotification('Updated','success','filled')
+          this.close(true)
+        } else{
+          createNotification(res.message,'error','filled')
+        }             
+  
+  })
+  .catch((error) => { 
+    this.setState({
+      loading : false
+    })
+  });
+}
+
+close(isedit)
+{
+  this.props.closeModal(isedit)
+}
+handleKeypress (e) {
+  const characterCode = e.key
+  if (characterCode === 'Backspace') return
+
+  const characterNumber = Number(characterCode)
+  if (characterNumber >= 0 && characterNumber <= 9) {
+    if (e.currentTarget.value && e.currentTarget.value.length) {
+      return
+    } else if (characterNumber === 0) {
+      e.preventDefault()
+    }
+  } else {
+    e.preventDefault()
+  }
+}
+  render()
+  {
+  
+    const {name,isEdit,status,loading,lane_count} = this.state
+    const {locale,languageData} = this.props
+    return (
+      <div>
+           {loading && 
+          <div>
+            <Loading loading={true} background="rgba(239,100,50, 0.1)" loaderColor="#EF6432" />
+          </div>
+        }
+             <Row>
+              <Colxx xxs="4" className="mb-4">
+                   <Label> {onChangeLanguage(locale,'Tender Name',languageData)}<a style = {{color :'red'}}>*</a></Label>
+              </Colxx>
+               
+            <Colxx xxs="8" className="mb-4">
+                  <Input 
+                        type="text"
+                        placeholder = {onChangeLanguage(locale,'Tender Name',languageData)} 
+                        value = {name}  
+                        onChange= {(e)=>this.setState({name : e.target.value})} ></Input>
+                 </Colxx>
+                
+             </Row>
+             <Row>
+              <Colxx xxs="4" className="mb-4">
+                   <Label> {onChangeLanguage(locale,'Lane Count',languageData)}<a style = {{color :'red'}}>*</a></Label>
+              </Colxx>
+               
+            <Colxx xxs="8" className="mb-4">
+                  <Input 
+                        type="number"
+                        type = "number" min="0"  step='1'
+                        onKeyDown={this.handleKeypress}
+                        placeholder = {onChangeLanguage(locale,'Lane Count',languageData)} 
+                        value = {lane_count}  
+                        onChange= {(e)=>this.setState({lane_count : e.target.value})} ></Input>
+                 </Colxx>
+                
+             </Row>
+             {isEdit && 
+                <Row>
+                <Colxx xxs="4" className="mb-4">
+                      <Label>{onChangeLanguage(locale,'Status',languageData)}</Label>
+                </Colxx>
+                  
+                <Colxx xxs="8" className="mb-4">
+                 <select className='fontstyle buttoncolor input-text'
+                     type="select"
+                     name="aggregatename"
+                     id="name"
+                     placeholder="Select"
+                     value={status}
+                     onChange={(e) =>this.setState({status :parseInt(e.target.value)})}
+                     >
+                     <option value = {1}>{onChangeLanguage(locale,'Active',languageData)}</option>
+                     <option value = {0}>{onChangeLanguage(locale,'In - Active',languageData)}</option>
+                  
+                  </select>
+                  </Colxx>
+                  
+                </Row>
+             }
+           <Row>
+               <Colxx xxs="4" className="mb-4"> </Colxx>       
+               <Colxx xxs="3" className="mb-4"> 
+                  <Button color = "primary" className = 'fontstyle button-width'  onClick={()=>this.close(false)}>
+                  {onChangeLanguage(locale,'Cancel',languageData)} 
+                   
+                  </Button>
+                  
+               </Colxx>   
+               <Colxx xxs="5" className="mb-4"> 
+                <Button color = "secondary" className="fontstyle button-width" onClick={()=>this.onSubmit()}>
+                    {onChangeLanguage(locale,'Submit',languageData)} 
+                  </Button>
+               </Colxx>       
+               
+            </Row>
+      </div>
+    );
+  }
+}
+
+
+const mapStateToProps = ({ settings }) => {
+  const { locale,languageData} = settings;
+  return {locale, languageData};
+};
+export default injectIntl(
+  connect(mapStateToProps, {
+
+  })(RegisterUser)
+);
+

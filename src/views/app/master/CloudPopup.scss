@@ -1,0 +1,129 @@
+/* Background Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75); /* Adjust opacity for desired transparency */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Cloud Popup Container */
+.cloud-popup {
+  position: relative;
+  width: 500px; /* Adjusted width for a more balanced appearance */
+  height: 350px; /* Increased height for better content placement */
+  background: linear-gradient(to bottom, #f7f9fc, #ebeef3); /* Updated gradient for a subtle color shift */
+  border-radius: 50px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Reduced shadow intensity for a cleaner look */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Adjusted for better content distribution */
+  align-items: center;
+  padding: 25px; /* Increased padding for improved spacing */
+}
+
+/* Cloud Details (Optional) */
+.cloud-popup::before,
+.cloud-popup::after {
+  content: "";
+  position: absolute;
+  background: radial-gradient(circle, #ffffff, #d9e9f7);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+/* Smiley Face */
+.cloud-face {
+  position: relative;
+  width: 80px; /* Reduced size for better balance */
+  height: 80px;
+  background: #ffeb3b; /* Lighter yellow for a brighter feel */
+  border-radius: 50%;
+  box-shadow: inset 0 -3px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.cloud-eyes {
+  display: flex;
+  justify-content: space-between;
+  width: 40%;
+}
+
+.eye {
+  width: 8px;
+  height: 8px;
+  background-color: #222; /* Darker brown for better contrast */
+  border-radius: 50%;
+  animation: blink 2s infinite;
+}
+
+.cloud-smile {
+  width: 40px; /* Reduced size for better proportion */
+  height: 20px;
+  border: 2px solid #222; /* Darker brown for better contrast */
+  border-top: none;
+  border-radius: 0 0 50px 50px;
+  margin-top: 8px;
+}
+.cloud-close-button {
+  padding: 10px 25px;
+  font-size: 1em;
+  font-family: "Nunito", sans-serif;
+  color: white;
+  background: #EF6432;
+  border: none;
+  border-radius: 25px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cloud-close-button:hover {
+  background: #EF6432;
+  transform: scale(1.05);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+/* Title and Message Styling */
+.cloud-title {
+  font-family: "Nunito", sans-serif; /* Consistent font choice */
+  font-size: 1.6em; /* Slightly smaller for readability */
+  color: #222; /* Darker color for better contrast */
+  margin: 10px 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.cloud-message {
+  font-size: 1.5em; /* Slightly smaller for better content flow */
+  font-family: "Nunito", sans-serif; /* Consistent font choice */
+  text-align: center;
+  color: #555;
+  margin: 15px;
+  font-weight: bold; /* Added bold font weight for stronger text */
+}
+/* Keyframes for Blink */
+@keyframes blink {
+  0%, 95%, 100% {
+    height: 8px;
+  }
+  96%, 98% {
+    height: 2px;
+  }
+}
+
+/* Keyframes for Smile */
+@keyframes smile {
+  0%, 95%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
