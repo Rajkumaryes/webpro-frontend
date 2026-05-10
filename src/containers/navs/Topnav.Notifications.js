@@ -59,31 +59,54 @@ class TopnavNotifications extends Component {
   }
   getNotification(username)
   {
-     
-     const hubConnection = new HubConnection(`${apiUrl}/chat`);
-     let  connection = new HubConnection("/chat");
-       connection.on('sendToAll', data => {
-           console.log('notification testing ===> ',data);
-       });
-                           
-     connection.start();
- 
-   this.setState({ hubConnection }, () => {
-     this.state.hubConnection
-       .start()
-       .then(() => console.log('notification testing ===> ','Connection started!'))
-       .catch(err => console.log('notification testing ===> ','Error while establishing connection :('));
-       this.state.hubConnection.on('sendToAll', ( receivedMessage) => {
-       const text = `${receivedMessage}`;
-       //  console.log('khfsdygfjd '+JSON.stringify(text))
-       if(text.to_userid === username){
-         const messages = this.state.messages.concat([text]);
-         this.setState({ messages ,
-           count : messages.length});
-       }
-       
-     });
-   });
+    // Create a single connection instance. Use apiUrl if available, otherwise fall back to relative path.
+    try {
+      const connectionUrl = apiUrl ? `${apiUrl}/chat` : '/chat';
+      const connection = new HubConnection(connectionUrl);
+
+      // Safe message handler: attempt to parse JSON if a string is received.
+      const safeHandler = (receivedMessage) => {
+        let payload = receivedMessage;
+        if (typeof receivedMessage === 'string') {
+          try {
+            payload = JSON.parse(receivedMessage);
+          } catch (e) {
+            // If parsing fails, keep the raw string as payload
+            // eslint-disable-next-line no-console
+            console.warn('Notification: failed to parse receivedMessage as JSON, using raw string', e);
+            payload = { text: receivedMessage };
+          }
+        }
+
+        // If payload is an object, inspect to_userid field safely
+        try {
+          if (payload && payload.to_userid && payload.to_userid === username) {
+            const messages = this.state.messages.concat([payload]);
+            this.setState({ messages, count: messages.length });
+          }
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.warn('Notification: error handling payload', err, payload);
+        }
+      };
+
+      connection.on('sendToAll', safeHandler);
+
+      // start connection but don't let failures break the app
+      connection.start()
+        .then(() => {
+          // eslint-disable-next-line no-console
+          console.log('notification testing ===> Connection started!');
+          this.setState({ hubConnection: connection });
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.warn('notification testing ===> Error while establishing connection :(', err);
+        });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('notification testing ===> Failed to initialize HubConnection', e);
+    }
  
   }
   onClickView()

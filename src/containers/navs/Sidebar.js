@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Row } from 'reactstrap';
 import { Colxx } from '../../components/common/CustomBootstrap';
-import ReactDOM from 'react-dom';
+// React 18's createRoot lives in 'react-dom/client', but findDOMNode is exported from the legacy entry.
+// Use the legacy entry here because this component relies on findDOMNode().
+// No need for react-dom here after refactor; using a ref instead of findDOMNode
 import { Nav, NavItem, Collapse } from 'reactstrap';
 import { NavLink, withRouter } from 'react-router-dom';
 import classnames from 'classnames';
@@ -30,6 +32,8 @@ class Sidebar extends Component {
       collapsedMenus: [],
       menuItems:[]
     };
+    // ref for the sidebar container to replace findDOMNode usage
+    this.containerRef = React.createRef();
   }
   componentDidMount() {
     window.addEventListener('resize', this.handleWindowResize);
@@ -220,7 +224,7 @@ class Sidebar extends Component {
   };
 
   getContainer = () => {
-    return ReactDOM.findDOMNode(this);
+    return this.containerRef.current;
   };
 
   toggle = () => {
@@ -450,7 +454,7 @@ class Sidebar extends Component {
     } = this.state;
     const {locale,languageData,menu_path} = this.props
     return (
-      <div className="sidebar">
+      <div className="sidebar" ref={this.containerRef}>
         <div className="main-menu" >
           <div className="scroll">
             <PerfectScrollbar

@@ -70,7 +70,16 @@ class MasterPage extends Component {
               for(var i = 0 ;i <res.data.length;i++)
               {
                 var dict  = res.data[i]
-                let languagedata = JSON.parse(dict.languagedata);
+                let languagedata = {};
+                try {
+                  if (dict.languagedata) {
+                    languagedata = JSON.parse(dict.languagedata);
+                  }
+                } catch (e) {
+                  // eslint-disable-next-line no-console
+                  console.warn('Failed to parse languagedata entry', e, dict.languagedata);
+                  languagedata = {};
+                }
                 dict.languagedata = languagedata
                 list.push(dict)
               }

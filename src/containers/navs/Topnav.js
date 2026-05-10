@@ -107,7 +107,18 @@ const TopNav = ({
             for(var i = 0 ;i <res.data.length;i++)
             {
               var dict  = res.data[i]
-              let languagedata = JSON.parse(dict.languagedata);
+              let languagedata = {};
+              try {
+                if (dict.languagedata) {
+                  languagedata = JSON.parse(dict.languagedata);
+                }
+              } catch (e) {
+                // If parsing fails, keep an empty object and warn in console
+                // This avoids uncaught runtime exceptions when backend returns invalid JSON
+                // eslint-disable-next-line no-console
+                console.warn('Failed to parse languagedata for language entry', e, dict.languagedata);
+                languagedata = {};
+              }
               dict.languagedata = languagedata
               list.push(dict)
             }

@@ -129,7 +129,17 @@ const ViewUnauthorized = React.lazy(() =>
 
 const Master = ({ match }) => {
   const allowedRoleIds = {};
-  const menuData = JSON.parse(localStorage.getItem("menuData"));
+  let menuData = [];
+  try {
+    const raw = localStorage.getItem("menuData");
+    if (raw) {
+      menuData = JSON.parse(raw) || [];
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn('Failed to parse menuData from localStorage', e, localStorage.getItem('menuData'));
+    menuData = [];
+  }
 const exportsMenu = menuData ? menuData.filter((menu) => menu.key === "Exports") : [];
 const firstExport = exportsMenu.length > 0 ? exportsMenu[0] : null;
 const children = firstExport ? firstExport.children : [];
